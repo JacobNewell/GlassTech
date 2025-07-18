@@ -30,15 +30,21 @@
       <label><input type="checkbox" name="options" value="Нічого з переліченого" id="noneOption" /> Нічого з переліченого</label>
     </fieldset>
 
+    <label>Фото авто:</label>
+    <input type="file" name="photo" id="photoInput" accept="image/*" required />
+
     <button type="submit">Надіслати</button>
   </form>
 
   <script>
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+    }
+
     const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
     const groupChatId = "-1002566804604";
 
-    // Логіка: якщо вибрано "Нічого з переліченого", знімаємо інші чекбокси
-    document.getElementById('noneOption').addEventListener('change', function(e) {
+    document.getElementById('noneOption').addEventListener('change', function() {
       if (this.checked) {
         document.querySelectorAll('input[name="options"]').forEach(el => {
           if (el !== this) el.checked = false;
@@ -46,11 +52,10 @@
       }
     });
 
-    // Логіка: якщо вибрано щось інше — знімаємо "Нічого з переліченого"
     document.querySelectorAll('input[name="options"]').forEach(el => {
       if (el.id !== 'noneOption') {
-        el.addEventListener('change', function() {
-          if (this.checked) {
+        el.addEventListener('change', () => {
+          if (el.checked) {
             document.getElementById('noneOption').checked = false;
           }
         });
@@ -65,14 +70,17 @@
         .map(el => el.value)
         .join(', ') || 'Не обрано';
 
-      const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
-      const authorLink = tgUser?.username
-        ? `🧑 Клієнт: [${tgUser.first_name}](https://t.me/${tgUser.username})`
-        : tgUser?.first_name
-          ? `🧑 Клієнт: ${tgUser.first_name} (без username)`
-          : `🧑 Клієнт: Не визначено`;
+      let authorLink = '🧑 Клієнт: Не визначено';
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+        authorLink = tgUser?.username
+          ? `🧑 Клієнт: [${tgUser.first_name}](https://t.me/${tgUser.username})`
+          : tgUser?.first_name
+            ? `🧑 Клієнт: ${tgUser.first_name} (без username)`
+            : `🧑 Клієнт: Не визначено`;
+      }
 
-      const message = `
+      const messageText = `
 🚗 *Нова заявка:*
 ${authorLink}
 *Марка:* ${form.get('brand')}
@@ -80,19 +88,25 @@ ${authorLink}
 *Рік:* ${form.get('year')}
 *Кузов:* ${form.get('bodyType')}
 *Наявність обладнання:* ${selectedOptions}
-      `;
+      `.trim();
 
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      const photoFile = document.getElementById('photoInput').files[0];
+      if (!photoFile) {
+        alert("По можливості, прикріпіть чітке фото авто з вулиці.");
+        return;
+      }
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("chat_id", groupChatId);
+      formDataToSend.append("caption", messageText);
+      formDataToSend.append("photo", photoFile);
+
+      await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: groupChatId,
-          text: message,
-          parse_mode: "Markdown"
-        })
+        body: formDataToSend
       });
 
-      alert('Форму успішно надіслано! Очікуйте відповідь оператора!');
+      alert('Форма успішно надіслана з фото! Дякуємо 😊');
     });
   </script>
 
