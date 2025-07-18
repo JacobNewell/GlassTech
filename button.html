@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Надіслати Web App-кнопку</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      font-size: 18px;
+      padding: 15px 30px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #006699;
+    }
+    .status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Надіслати кнопку WebApp у Telegram-групу</h2>
+  <button onclick="sendWebAppButton()">Надіслати</button>
+  <div class="status" id="status"></div>
+
+  <script>
+    async function sendWebAppButton() {
+      const status = document.getElementById("status");
+      status.textContent = "Надсилаю запит...";
+
+      const url = "https://api.telegram.org/bot7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo/sendMessage";
+
+      const payload = {
+        chat_id: "-1002566804604",
+        text: "Будь ласка, заповніть форму для авто:",
+        reply_markup: {
+          inline_keyboard: [[
+            {
+              text: "Заповнити форму",
+              web_app: {
+                url: "https://glasstech.github.io"
+              }
+            }
+          ]]
+        }
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.ok) {
+          status.textContent = "✅ Кнопку успішно надіслано!";
+        } else {
+          status.textContent = "❌ Помилка: " + result.description;
+        }
+        console.log(result);
+      } catch (error) {
+        status.textContent = "❌ Не вдалося надіслати: " + error.message;
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
