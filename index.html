@@ -27,8 +27,8 @@
   </form>
 
   <script>
-    const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo"; // 🔐 твій токен
-    const groupChatId = "-1002566804604"; // 🧑‍🤝‍🧑 chat_id твоєї групи
+    const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
+    const groupChatId = "-1002566804604";
 
     document.getElementById('carForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -37,7 +37,9 @@
       const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
       const authorLink = tgUser?.username
         ? `🧑 Клієнт: [${tgUser.first_name}](https://t.me/${tgUser.username})`
-        : `🧑 Клієнт: ${tgUser?.first_name || 'Невідомо'} (без username)`;
+        : tgUser?.first_name
+          ? `🧑 Клієнт: ${tgUser.first_name} (без username)`
+          : `🧑 Клієнт: Не визначено`;
 
       const message = `
 🚗 *Нова заявка:*
