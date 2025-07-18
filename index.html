@@ -8,6 +8,7 @@
     form { background: #fff; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; }
     input, textarea { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
     button { padding: 10px; background: #2b8aed; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    label { display: block; margin: 6px 0; }
   </style>
 </head>
 <body>
@@ -19,9 +20,15 @@
     <input type="number" name="year" placeholder="Рік випуску" required />
     <input type="text" name="bodyType" placeholder="Вид кузова" required />
 
-    <label>Чи готові ви до дзвінка?</label>
-    <label><input type="radio" name="callReady" value="Так" required /> Так</label>
-    <label><input type="radio" name="callReady" value="Ні" required /> Ні</label>
+    <fieldset>
+      <legend>Наявність обладнання:</legend>
+      <label><input type="checkbox" name="options" value="Датчик дощу" /> Датчик дощу</label>
+      <label><input type="checkbox" name="options" value="Загальний обігрів" /> Загальний обігрів</label>
+      <label><input type="checkbox" name="options" value="Обігрів двірників" /> Обігрів двірників</label>
+      <label><input type="checkbox" name="options" value="Камера" /> Камера</label>
+      <label><input type="checkbox" name="options" value="Антена" /> Антена</label>
+      <label><input type="checkbox" name="options" value="Нічого з переліченого" id="noneOption" /> Нічого з переліченого</label>
+    </fieldset>
 
     <button type="submit">Надіслати</button>
   </form>
@@ -30,9 +37,33 @@
     const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
     const groupChatId = "-1002566804604";
 
+    // Логіка: якщо вибрано "Нічого з переліченого", знімаємо інші чекбокси
+    document.getElementById('noneOption').addEventListener('change', function(e) {
+      if (this.checked) {
+        document.querySelectorAll('input[name="options"]').forEach(el => {
+          if (el !== this) el.checked = false;
+        });
+      }
+    });
+
+    // Логіка: якщо вибрано щось інше — знімаємо "Нічого з переліченого"
+    document.querySelectorAll('input[name="options"]').forEach(el => {
+      if (el.id !== 'noneOption') {
+        el.addEventListener('change', function() {
+          if (this.checked) {
+            document.getElementById('noneOption').checked = false;
+          }
+        });
+      }
+    });
+
     document.getElementById('carForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = new FormData(e.target);
+
+      const selectedOptions = Array.from(document.querySelectorAll('input[name="options"]:checked'))
+        .map(el => el.value)
+        .join(', ') || 'Не обрано';
 
       const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
       const authorLink = tgUser?.username
@@ -48,7 +79,7 @@ ${authorLink}
 *Модель:* ${form.get('model')}
 *Рік:* ${form.get('year')}
 *Кузов:* ${form.get('bodyType')}
-*Готовність до дзвінка:* ${form.get('callReady')}
+*Наявність обладнання:* ${selectedOptions}
       `;
 
       await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -67,3 +98,11 @@ ${authorLink}
 
 </body>
 </html>
+
+
+
+
+
+
+const botToken = "";
+    const groupChatId = "-1002566804604";
