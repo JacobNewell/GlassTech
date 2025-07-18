@@ -30,7 +30,7 @@
       <label><input type="checkbox" name="options" value="Нічого з переліченого" id="noneOption" /> Нічого з переліченого</label>
     </fieldset>
 
-    <label>Фото авто:</label>
+    <label>По можливості, прикріпіть чітке фото авто з вулиці:</label>
     <input type="file" name="photo" id="photoInput" accept="image/*" required />
 
     <button type="submit">Надіслати</button>
@@ -92,7 +92,7 @@ ${authorLink}
 
       const photoFile = document.getElementById('photoInput').files[0];
       if (!photoFile) {
-        alert("По можливості, прикріпіть чітке фото авто з вулиці.");
+        alert("Тест");
         return;
       }
 
