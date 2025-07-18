@@ -31,7 +31,7 @@
     </fieldset>
 
     <label>По можливості, прикріпіть чітке фото авто з вулиці:</label>
-    <input type="file" name="photo" id="photoInput" accept="image/*" required />
+    <input type="file" name="photo" id="photoInput" accept="image/*" />
 
     <button type="submit">Надіслати</button>
   </form>
@@ -91,22 +91,30 @@ ${authorLink}
       `.trim();
 
       const photoFile = document.getElementById('photoInput').files[0];
-      if (!photoFile) {
-        alert("Тест");
-        return;
+
+      if (photoFile) {
+        const formDataToSend = new FormData();
+        formDataToSend.append("chat_id", groupChatId);
+        formDataToSend.append("caption", messageText);
+        formDataToSend.append("photo", photoFile);
+
+        await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+          method: 'POST',
+          body: formDataToSend
+        });
+      } else {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: groupChatId,
+            text: messageText,
+            parse_mode: "Markdown"
+          })
+        });
       }
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("chat_id", groupChatId);
-      formDataToSend.append("caption", messageText);
-      formDataToSend.append("photo", photoFile);
-
-      await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-        method: 'POST',
-        body: formDataToSend
-      });
-
-      alert('Форма успішно надіслана з фото! Дякуємо 😊');
+      alert('Форма успішно надіслана! Дякуємо 😊');
     });
   </script>
 
