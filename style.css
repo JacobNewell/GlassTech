@@ -1,40 +1,73 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>My site</title>
-</head>
-<body>
-<header>
-	<h1>Main Header - Name of site</h1>
-	<h2>Sub Header - Topic of site</h2>
-</header>
-<nav>
-	<ul>
-		<li><a href="index1.html">Home</a></li>
-		<li><a href="info.html">About</a></li>
-		<li><a href="gallery.html">Gallery</a></li>
-		<li><a href="form.html">Contacts</a></li>
-	</ul>
-</nav>
+body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
 
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer volutpat rhoncus sem in mollis. Nulla mattis nisi vitae ligula tempor dapibus. Maecenas facilisis convallis finibus. Donec ac justo a odio pulvinar venenatis. Sed fringilla id tellus a pharetra. Sed sapien erat, ornare ut lacus vitae, condimentum sollicitudin lacus. Cras vestibulum massa ut venenatis faucibus. Fusce quis nisl sem. Aliquam tempor, libero nec semper vulputate, turpis ex efficitur turpis, ut finibus est lectus a quam. In rhoncus nunc nibh, quis aliquet felis iaculis in. Maecenas ultrices, arcu in rhoncus faucibus, nisi ipsum rutrum lectus, in commodo justo leo id quam.
-</p>
-<p>
-Cras congue, dolor vitae congue varius, ligula justo posuere nisi, sit amet pretium tellus elit laoreet massa. Maecenas faucibus et felis vel mattis. Duis ultricies diam posuere sapien ullamcorper bibendum. Proin eget leo diam. Nam mollis nulla ac ligula feugiat, vel tempor sapien pretium. Sed imperdiet vulputate fringilla. Donec eu enim ex. Nunc consectetur sem in orci malesuada mattis. Praesent nisl nunc, cursus sit amet sagittis ut, scelerisque ac lorem. Nulla efficitur risus nec neque fringilla elementum id sed velit. Sed tincidunt, leo sed euismod interdum, augue dui elementum dui, sit amet elementum metus felis eu justo. Curabitur faucibus aliquet eros quis scelerisque. Fusce in mattis dolor, vitae hendrerit metus. Vivamus ut fermentum ipsum.
-</p>
-<p>
-Fusce eu lorem purus. Vestibulum faucibus lorem sagittis, faucibus orci et, sollicitudin libero. Pellentesque est nisl, mollis eu magna eu, elementum convallis arcu. Donec vestibulum commodo neque, ac hendrerit erat venenatis ac. Sed sit amet euismod velit. Donec pretium diam sed sodales venenatis. Morbi hendrerit laoreet lectus vel accumsan. Phasellus lobortis ex tincidunt velit ultricies gravida. Nulla suscipit dignissim faucibus. Etiam quis consequat felis, feugiat rutrum massa. Nullam iaculis euismod pellentesque. Etiam vestibulum volutpat tortor, vitae laoreet leo semper vehicula. Mauris ut ipsum id purus luctus interdum. Maecenas consectetur non nisi a mattis. Quisque convallis nec urna ut consectetur.
-</p>
-<p>
-Cras mauris ante, imperdiet fringilla nisi ut, consectetur convallis dui. Donec congue maximus est. Nulla ornare dui quis mauris scelerisque, at scelerisque ante vulputate. Nullam lectus felis, tincidunt vel congue sit amet, euismod vel elit. Nulla nibh tellus, elementum eget sagittis sed, consequat sed libero. Quisque in ultrices metus, at tincidunt urna. Pellentesque semper enim at orci rhoncus convallis.
-</p>
-<p>
-In odio orci, vulputate id ultrices eu, convallis eget elit. Nulla porta euismod felis sed pharetra. Etiam faucibus tincidunt augue, vitae aliquet lorem semper nec. Etiam sed justo in urna auctor placerat. Sed nec lacinia ligula, sed lobortis tellus. Aliquam leo turpis, imperdiet ac posuere id, hendrerit at dolor. Quisque blandit, sem vehicula tempor rhoncus, quam urna posuere tellus, sit amet dignissim enim turpis nec massa.
-</p>
-	<footer>
-		<p>Copyright 2099</p>
-	</footer>
-</body>
-</html>
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    input, textarea {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 8px;
+    }
+
+    button {
+      padding: 10px;
+      background: #2b8aed;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    fieldset {
+      margin-bottom: 15px;
+      border: none;
+      padding: 0;
+    }
+
+    legend {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .checkbox-grid, .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+
+    .checkbox-grid label, .radio-grid label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f0f0f0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    #equipmentBlock {
+      transition: opacity 0.3s ease;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    #equipmentBlock.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+	
+	.header-wrap {
+	  max-width: 400px;
+	  margin: auto;
+	  text-align: center;
+	}
