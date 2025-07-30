@@ -4,133 +4,218 @@
   <meta charset="UTF-8" />
   <title>Форма для авто</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    form { background: #fff; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; }
-    input, textarea { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
-    button { padding: 10px; background: #2b8aed; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    label { display: block; margin: 6px 0; }
-  </style>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-<body>
-  <script>
-  window.Telegram.WebApp.ready();
-
-  const user = window.Telegram.WebApp.initDataUnsafe?.user;
-
-  if (user) {
-    console.log("Ім’я користувача:", user.first_name, user.last_name);
-    console.log("Username:", user.username);
-    console.log("ID:", user.id);
-  } else {
-    console.log("Дані користувача відсутні. Можливо, форма надіслана через Браузер.");
-  }
-</script>
-  <h2>Інформація про авто</h2>
-  <form id="carForm">
-    <input type="text" name="brand" placeholder="Марка авто" required />
-    <input type="text" name="model" placeholder="Модель авто" required />
-    <input type="number" name="year" placeholder="Рік випуску" required />
-    <input type="text" name="bodyType" placeholder="Вид кузова" required />
-
-    <fieldset>
-      <legend>Наявність обладнання:</legend>
-      <label><input type="checkbox" name="options" value="Датчик дощу" /> Датчик дощу</label>
-      <label><input type="checkbox" name="options" value="Загальний обігрів" /> Загальний обігрів</label>
-      <label><input type="checkbox" name="options" value="Обігрів двірників" /> Обігрів двірників</label>
-      <label><input type="checkbox" name="options" value="Камера" /> Камера</label>
-      <label><input type="checkbox" name="options" value="Антена" /> Антена</label>
-      <label><input type="checkbox" name="options" value="Нічого з переліченого" id="noneOption" /> Нічого з переліченого</label>
-    </fieldset>
-
-    <label>По можливості, прикріпіть чітке фото авто з вулиці:</label>
-    <input type="file" name="photo" id="photoInput" accept="image/*" />
-
-    <button type="submit">Надіслати</button>
-  </form>
-
-  <script>
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.ready();
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
     }
 
-    const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
-    const groupChatId = "1463281290";
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: auto;
+    }
 
-    document.getElementById('noneOption').addEventListener('change', function() {
-      if (this.checked) {
-        document.querySelectorAll('input[name="options"]').forEach(el => {
-          if (el !== this) el.checked = false;
-        });
-      }
-    });
+    input, textarea {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 8px;
+    }
 
-    document.querySelectorAll('input[name="options"]').forEach(el => {
-      if (el.id !== 'noneOption') {
-        el.addEventListener('change', () => {
-          if (el.checked) {
-            document.getElementById('noneOption').checked = false;
-          }
-        });
-      }
-    });
+    button {
+      padding: 10px;
+      background: #2b8aed;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-    document.getElementById('carForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = new FormData(e.target);
+    fieldset {
+      margin-bottom: 15px;
+      border: none;
+      padding: 0;
+    }
 
-      const selectedOptions = Array.from(document.querySelectorAll('input[name="options"]:checked'))
-        .map(el => el.value)
-        .join(', ') || 'Не обрано';
+    legend {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
 
-      let authorLink = '🧑 Клієнт: Не визначено';
-      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
-        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-        authorLink = tgUser?.username
-          ? `🧑 Клієнт: [${tgUser.first_name}](https://t.me/${tgUser.username})`
-          : tgUser?.first_name
-            ? `🧑 Клієнт: ${tgUser.first_name} (без username)`
-            : `🧑 Клієнт: Не визначено`;
-      }
+    .checkbox-grid, .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
 
-      const messageText = `
-🚗 *Нова заявка:*
-${authorLink}
-*Марка:* ${form.get('brand')}
-*Модель:* ${form.get('model')}
-*Рік:* ${form.get('year')}
-*Кузов:* ${form.get('bodyType')}
-*Наявність обладнання:* ${selectedOptions}
-      `.trim();
+    .checkbox-grid label, .radio-grid label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f0f0f0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-      const photoFile = document.getElementById('photoInput').files[0];
+    #equipmentBlock {
+      transition: opacity 0.3s ease;
+      opacity: 0.3;
+      pointer-events: none;
+    }
 
-      if (photoFile) {
-        const formDataToSend = new FormData();
-        formDataToSend.append("chat_id", groupChatId);
-        formDataToSend.append("caption", messageText);
-        formDataToSend.append("photo", photoFile);
+    #equipmentBlock.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+	
+	.header-wrap {
+	  max-width: 400px;
+	  margin: auto;
+	  text-align: center;
+	}
+  </style>
 
-        await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-          method: 'POST',
-          body: formDataToSend
-        });
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<h2 class="header-wrap">Інформація про авто</h2>
+<form id="carForm">
+  <input type="text" name="brand" placeholder="Марка авто" required />
+  <input type="text" name="model" placeholder="Модель авто" required />
+  <input type="number" name="year" placeholder="Рік випуску" required />
+  <input type="text" name="bodyType" placeholder="Вид кузова" required />
+
+  <fieldset>
+    <legend>Тип скла, що потребує заміни:</legend>
+    <div class="radio-grid">
+      <label>Лобове <input type="radio" name="glassType" value="Лобове" required /></label>
+      <label>Заднє <input type="radio" name="glassType" value="Заднє" /></label>
+      <label>Бокове <input type="radio" name="glassType" value="Бокове" /></label>
+    </div>
+  </fieldset>
+
+  <fieldset id="equipmentBlock">
+    <legend>Наявність обладнання:</legend>
+    <div class="checkbox-grid">
+      <label>Датчик дощу <input type="checkbox" name="options" value="Датчик дощу" /></label>
+      <label>Загальний обігрів <input type="checkbox" name="options" value="Загальний обігрів" /></label>
+      <label>Обігрів двірників <input type="checkbox" name="options" value="Обігрів двірників" /></label>
+      <label>Камера <input type="checkbox" name="options" value="Камера" /></label>
+      <label>Антена <input type="checkbox" name="options" value="Антена" /></label>
+      <label>Нічого з переліченого <input type="checkbox" name="options" value="Нічого з переліченого" id="noneOption" /></label>
+    </div>
+  </fieldset>
+
+  <label>По можливості, прикріпіть чітке фото авто з вулиці:</label>
+  <input type="file" name="photo" id="photoInput" accept="image/*" />
+
+  <button type="submit">Надіслати</button>
+</form>
+
+<script>
+  window.Telegram.WebApp.ready();
+
+  const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
+  const groupChatId = "1463281290";
+
+  document.querySelectorAll('input[name="glassType"]').forEach(el => {
+    el.addEventListener('change', () => {
+      const block = document.getElementById('equipmentBlock');
+      if (el.value === 'Лобове') {
+        block.classList.add('visible');
       } else {
-        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: groupChatId,
-            text: messageText,
-            parse_mode: "Markdown"
-          })
-        });
+        block.classList.remove('visible');
+        document.querySelectorAll('#equipmentBlock input[type="checkbox"]').forEach(c => c.checked = false);
       }
-
-      alert('Форма успішно надіслана! Дякуємо 😊');
     });
-  </script>
+  });
+
+  document.getElementById('noneOption').addEventListener('change', function () {
+    if (this.checked) {
+      document.querySelectorAll('input[name="options"]').forEach(el => {
+        if (el !== this) el.checked = false;
+      });
+    }
+  });
+  document.querySelectorAll('input[name="options"]').forEach(el => {
+    if (el.id !== 'noneOption') {
+      el.addEventListener('change', () => {
+        if (el.checked) {
+          document.getElementById('noneOption').checked = false;
+        }
+      });
+    }
+  });
+
+  document.getElementById('carForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+
+    const selectedOptions = Array.from(document.querySelectorAll('input[name="options"]:checked'))
+      .map(el => el.value)
+      .join(', ') || 'Не обрано';
+
+    const selectedGlassType = document.querySelector('input[name="glassType"]:checked')?.value || 'Не вказано';
+
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('uk-UA');
+    const formattedTime = now.toLocaleTimeString('uk-UA');
+
+    let authorLink = '🧑 Клієнт: Не визначено';
+    if (window.Telegram.WebApp.initDataUnsafe?.user) {
+      const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+      authorLink = tgUser?.username
+        ? `🧑 Клієнт: [${tgUser.first_name}](https://t.me/${tgUser.username})`
+        : tgUser?.first_name
+          ? `🧑 Клієнт: ${tgUser.first_name} (без username)`
+          : `🧑 Клієнт: Не визначено`;
+    }
+
+    const messageText = `
+🚗 *Нова заявка:*  
+${authorLink}  
+*Марка:* ${form.get('brand')}  
+*Модель:* ${form.get('model')}  
+*Рік:* ${form.get('year')}  
+*Кузов:* ${form.get('bodyType')}  
+*Тип скла:* ${selectedGlassType}  
+*Наявність обладнання:* ${selectedGlassType === 'Лобове' ? selectedOptions : 'Неактуально'}  
+📅 *Дата:* ${formattedDate}  
+⏰ *Час:* ${formattedTime}
+    `.trim();
+
+    const photoFile = document.getElementById('photoInput').files[0];
+
+    if (photoFile) {
+      const formDataToSend = new FormData();
+      formDataToSend.append("chat_id", groupChatId);
+      formDataToSend.append("caption", messageText);
+      formDataToSend.append("photo", photoFile);
+
+      await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+        method: 'POST',
+        body: formDataToSend
+      });
+    } else {
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: groupChatId,
+          text: messageText,
+          parse_mode: "Markdown"
+        })
+      });
+    }
+
+    alert('Форма успішно надіслана! Дякуємо 😊');
+  });
+</script>
 
 </body>
 </html>
