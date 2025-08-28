@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<link rel="stylesheet" href="style.css" >
   <meta charset="UTF-8" />
   <title>Форма для авто</title>
-
+  <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -15,7 +14,7 @@
   <input type="text" name="model" placeholder="Модель авто" required />
   <input type="number" name="year" placeholder="Рік випуску" required />
   <input type="text" name="bodyType" placeholder="Вид кузова" required />
-  <input type="number" name="vin" placeholder="VIN-код авто" required />
+  <input type="text" name="vin" placeholder="VIN-код авто" required />
 
   <fieldset>
     <legend>Тип скла, що потребує заміни:</legend>
@@ -71,6 +70,7 @@
       });
     }
   });
+
   document.querySelectorAll('input[name="options"]').forEach(el => {
     if (el.id !== 'noneOption') {
       el.addEventListener('change', () => {
@@ -83,6 +83,8 @@
 
   document.getElementById('carForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log("Форма надіслана");
+
     const form = new FormData(e.target);
 
     const selectedOptions = Array.from(document.querySelectorAll('input[name="options"]:checked'))
@@ -111,11 +113,11 @@ ${authorLink}
 *Марка:* ${form.get('brand')}  
 *Модель:* ${form.get('model')}  
 *Рік:* ${form.get('year')}  
-*Кузов:* ${form.get('bodyType')} 
-*VIN-код:* ${form.get('vin')}
-*Коментар від користувача:* ${form.get('comment')}
-*Т1ип скла:* ${selectedGlassType}  
-*Наявність обладнання:* ${selectedGlassType === 'Лобове' ? selectedOptions : 'Немає(обране НЕ лобове скло)'}  
+*Кузов:* ${form.get('bodyType')}  
+*VIN-код:* ${form.get('vin')}  
+*Коментар від користувача:* ${form.get('comment')}  
+*Тип скла:* ${selectedGlassType}  
+*Наявність обладнання:* ${selectedGlassType === 'Лобове' ? selectedOptions : 'Немає (обране НЕ лобове скло)'}  
 📅 *Дата:* ${formattedDate}  
 ⏰ *Час:* ${formattedTime}
     `.trim();
@@ -145,10 +147,9 @@ ${authorLink}
     }
 
     alert('Форма успішно надіслана! Дякуємо 😊');
+    document.getElementById('carForm').reset();
   });
 </script>
 
 </body>
 </html>
-
-
