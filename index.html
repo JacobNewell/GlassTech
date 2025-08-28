@@ -15,6 +15,7 @@
   <input type="text" name="model" placeholder="Модель авто" required />
   <input type="number" name="year" placeholder="Рік випуску" required />
   <input type="text" name="bodyType" placeholder="Вид кузова" required />
+  <input type="number" name="vin" placeholder="VIN-код авто" required />
 
   <fieldset>
     <legend>Тип скла, що потребує заміни:</legend>
@@ -39,6 +40,8 @@
 
   <label>По можливості, прикріпіть чітке фото авто з вулиці:</label>
   <input type="file" name="photo" id="photoInput" accept="image/*" />
+  <label>За бажанням, можете залишити коментар:</label>
+  <input type="text" name="comment" placeholder="Коментар" />
 
   <button type="submit">Надіслати</button>
 </form>
@@ -108,8 +111,10 @@ ${authorLink}
 *Марка:* ${form.get('brand')}  
 *Модель:* ${form.get('model')}  
 *Рік:* ${form.get('year')}  
-*Кузов:* ${form.get('bodyType')}  
-*Тип скла:* ${selectedGlassType}  
+*Кузов:* ${form.get('bodyType')} 
+*VIN-код:* ${fomr.get('vin')}
+*Коментар від користувача:* ${fomr.get('comment')}
+*Т1ип скла:* ${selectedGlassType}  
 *Наявність обладнання:* ${selectedGlassType === 'Лобове' ? selectedOptions : 'Немає(обране НЕ лобове скло)'}  
 📅 *Дата:* ${formattedDate}  
 ⏰ *Час:* ${formattedTime}
@@ -145,3 +150,4 @@ ${authorLink}
 
 </body>
 </html>
+
