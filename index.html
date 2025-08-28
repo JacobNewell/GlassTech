@@ -45,7 +45,7 @@
   <button type="submit">Надіслати</button>
 </form>
 
-<script>
+  <script>
   window.Telegram.WebApp.ready();
 
   const botToken = "7383504698:AAEsV0m8H2KhqlrefNCimaT3Jk14qQEAsEo";
@@ -97,6 +97,8 @@
     const formattedDate = now.toLocaleDateString('uk-UA');
     const formattedTime = now.toLocaleTimeString('uk-UA');
 
+    const commentText = form.get('comment')?.trim() || 'Відсутній';
+
     let authorLink = '🧑 Клієнт: Не визначено';
     if (window.Telegram.WebApp.initDataUnsafe?.user) {
       const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
@@ -115,7 +117,7 @@ ${authorLink}
 *Рік:* ${form.get('year')}  
 *Кузов:* ${form.get('bodyType')}  
 *VIN-код:* ${form.get('vin')}  
-*Коментар від користувача:* ${form.get('comment')}  
+*Коментар від користувача:* ${commentText}  
 *Тип скла:* ${selectedGlassType}  
 *Наявність обладнання:* ${selectedGlassType === 'Лобове' ? selectedOptions : 'Немає (обране НЕ лобове скло)'}  
 📅 *Дата:* ${formattedDate}  
@@ -153,3 +155,4 @@ ${authorLink}
 
 </body>
 </html>
+
